@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <script
+      src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+      integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html,
+      body {
+        height: 100vh;
+        width: 100vw;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="h-full w-full flex justify-center items-center">
+      <div
+        class="w-64 h-24 borderAA border-solid border-black/50 rounded flex flex-col justify-around items-center"
+      >
+        <button
+          id="abrir"
+          class="w-16 h-8 border border-solid border-black/25 bg-indigo-500 hover:bg-indigo-400 text-white rounded"
+        >
+          Abrir
+        </button>
+        <button
+          id="fechar"
+          class="w-16 h-8 border border-solid border-black/25 bg-red-500 hover:bg-red-400 text-white rounded"
+        >
+          Fechar
+        </button>
+      </div>
+
+      <div class="flex">
+        Status da janela: &nbsp;
+        <div id="status" class=""></div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    const socket = io("ws://localhost:4000");
+
+    document.querySelector("#abrir").addEventListener("click", () => {
+      socket.emit("abrir");
+    });
+    document.querySelector("#fechar").addEventListener("click", () => {
+      socket.emit("fechar");
+    });
+
+    socket.on("statusDaJanela", ({ closed }) => {
+      if (closed) {
+        document.querySelector("#status").innerHTML = "Fechado";
+      } else {
+        document.querySelector("#status").innerHTML = "Aberto";
+      }
+    });
+  </script>
+</html>
